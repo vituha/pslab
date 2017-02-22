@@ -6,18 +6,17 @@ Function GetPasswordStatusString([int] $passwordStatus)
         2 {return 'Enabled'}
         3 {return 'NA'}
         4 {return 'Unknown'}
-        default {return 'lazha'}
     }
 }
 
 Function GetOSInfo([string[]] $computerNames)
 {
     $computerNames `
-    | select -Property `
+    | Select-Object -Property `
         @{Name='csinfo'; Expression={Get-CimInstance -ComputerName $_ -ClassName Win32_ComputerSystem}}, `
         @{Name='biosinfo'; Expression={Get-CimInstance -ComputerName $_ -ClassName Win32_BIOS}}, `
         @{Name='osinfo'; Expression={Get-CimInstance -ComputerName $_ -ClassName Win32_OperatingSystem}} `
-    | select -Property `
+    | Select-Object -Property `
         @{Name='ComputerName'; Expression={$_.csinfo.Name}}, `
         @{Name='Workgroup'; Expression={$_.csinfo.Workgroup}}, `
         @{Name='AdminPassword'; Expression={GetPasswordStatusString -passwordStatus $_.csinfo.AdminPassworStatus}}, `
